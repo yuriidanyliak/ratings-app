@@ -1,0 +1,16 @@
+require:
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 3.0
+  NewCops: enable
+
+# A top class comment is not needed.
+Style/Documentation:
+  Enabled: false
+
+# Soft-wrap is a great invention
+Layout/LineLength:
+  Enabled: false

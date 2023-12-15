@@ -1,0 +1,125 @@
+name: CI
+on: [push]
+jobs:
+  rubocop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.5.3
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+
+      # required to compile pg ruby gem
+      - name: Install PostgreSQL client
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: sudo apt-get install libpq-dev
+
+      - name: Run rubocop
+        run: bundle exec rubocop
+  rspec:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:12
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        env:
+          # See: https://github.com/docker-library/postgres/issues/681
+          POSTGRES_HOST_AUTH_METHOD: trust
+      redis:
+        image: redis
+        ports: ['6379:6379']
+        options: --entrypoint redis-server
+    steps:
+      - uses: actions/checkout@v3.5.3
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+
+      - uses: actions/cache@v3.3.1
+        name: Cache assets
+        with:
+          path: |
+            public/assets
+            tmp/cache/webpacker
+          key: ${{ runner.os }}-assets-v1-${{ hashFiles('**/*.lock') }}-${{ hashFiles('app/javascript/**') }}
+          restore-keys: |
+            ${{ runner.os }}-assets-v1-${{ hashFiles('**/*.lock') }}-
+
+      - uses: actions/cache@v3.3.1
+        name: Cache packs
+        with:
+          path: public/packs-test
+          key: ${{ runner.os }}-packs-v1-${{ hashFiles('**/*.lock') }}-${{ hashFiles('tmp/cache/webpacker/last-compilation-digest-test') }}
+
+      # required to compile pg ruby gem
+      - name: Install PostgreSQL client
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: sudo apt-get install libpq-dev
+
+      - name: Compile assets
+        env:
+          # use localhost for the host here because we have specified a container for the job.
+          # If we were running the job on the VM this would be postgres
+          POSTGRES_HOST: localhost
+          POSTGRES_USER: postgres
+          PGUSER: postgres # needed for postgres
+          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
+          REDIS_URL: redis://localhost:6379/0
+          RAILS_ENV: test
+          CI: true
+        run: |
+          bundle exec rake db:setup
+          bundle exec rake assets:precompile assets:clean
+      - name: Run RSpec
+        env:
+          # use localhost for the host here because we have specified a container for the job.
+          # If we were running the job on the VM this would be postgres
+          POSTGRES_HOST: localhost
+          POSTGRES_USER: postgres
+          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
+          REDIS_URL: redis://localhost:6379/0
+          RAILS_ENV: test
+          CI: true
+        run: bundle exec rspec
+      - name: Upload coverage results
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: coverage-report
+          path: coverage
+
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.5.3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+      - name: Run linter
+        run: yarn run lint
+
+  jest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.5.3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn --frozen-lockfile
+      - name: Run jest test with coverage
+        run: yarn run jest --coverage
