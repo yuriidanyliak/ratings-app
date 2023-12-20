@@ -1,5 +1,9 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe Genre, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+RSpec.describe Genre do
+  it { is_expected.to have_many(:movies).dependent(:restrict_with_exception) }
+
+  it { is_expected.to validate_presence_of(:name) }
 end
