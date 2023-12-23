@@ -21,19 +21,6 @@ module API
           Movie.find(params[:id])
         end
       end
-
-      resource :ratings do
-        desc 'Create a new rating'
-        params do
-          requires :user_id, type: Integer, desc: 'User ID'
-          requires :movie_id, type: Integer, desc: 'Movie ID'
-          requires :score, type: Integer, desc: 'Rating score'
-          requires :review, type: String, desc: 'Rating review'
-        end
-        post do
-          Rating.create(user_id: params[:user_id], movie_id: params[:movie_id], score: params[:score], review: params[:review])
-        end
-      end
     end
   end
 end
