@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/api/v1/ratings_api.rb
 
 module API

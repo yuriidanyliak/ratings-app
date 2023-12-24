@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 module API
   module Entities
-   class Movie < Grape::Entity
-    expose :title
-    expose :year
-    expose :genre
+    class Movie < Grape::Entity
+      expose :title
+      expose :year
+      expose :genre
 
-    private
+      private
 
-    def genre
-      object.genre.name
+      def genre
+        object.genre.name
+      end
     end
-   end
   end
- end
+end
