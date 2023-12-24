@@ -6,5 +6,5 @@ Rails.application.routes.draw do
   root to: 'home#index'
 
   mount API::Root => '/api'
-  # mount GrapeSwagger::Engine => '/swagger'
+  mount GrapeSwaggerRails::Engine => '/swagger'
 end
