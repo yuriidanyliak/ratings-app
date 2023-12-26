@@ -1,4 +1,4 @@
-import { Layout, Empty, Hello } from 'antd';
+import { Layout } from 'antd';
 import * as React from 'react';
 import { Movies } from '../components/movies';
 
