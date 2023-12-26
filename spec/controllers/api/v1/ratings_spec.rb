@@ -29,9 +29,7 @@ describe API::V1::Ratings, type: :request do
       it 'serializes created Rating' do
         api_post
 
-        expect(json_response['user_id']).to eq(user.id)
-        expect(json_response['movie_id']).to eq(movie.id)
-        expect(json_response['score']).to eq(4)
+        expect(json_response).to include('user_id' => user.id, 'movie_id' => movie.id, 'score' => 4)
       end
     end
 
@@ -40,10 +38,13 @@ describe API::V1::Ratings, type: :request do
         { movie_id: movie.id, score: 4, review: nil }
       end
 
-      it 'returns Bad Request error with message' do
-        api_post
+      before { api_post }
 
+      it 'returns Bad Request error' do
         expect(response).to have_http_status(:bad_request)
+      end
+
+      it 'returns error message' do
         expect(json_response['error']).to eq('user_id is missing')
       end
     end
@@ -53,10 +54,13 @@ describe API::V1::Ratings, type: :request do
         { user_id: user.id, movie_id: movie.id, score: 'invalid', review: 'Sample Text' }
       end
 
-      it 'returns Bad Request error with message' do
-        api_post
+      before { api_post }
 
+      it 'returns Bad Request error' do
         expect(response).to have_http_status(:bad_request)
+      end
+
+      it 'returns error message' do
         expect(json_response['error']).to eq('score is invalid')
       end
     end

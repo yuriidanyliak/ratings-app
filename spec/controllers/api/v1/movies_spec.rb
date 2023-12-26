@@ -8,21 +8,28 @@ describe API::V1::Movies, type: :request do
   let(:json_response) { JSON.parse(response.body) }
 
   describe 'GET /api/movies' do
-    it 'returns a list of movies' do
-      get '/api/v1/movies'
+    before { get '/api/v1/movies' }
 
+    it 'returns successful response' do
       expect(response).to have_http_status(:ok)
-      expect(json_response.length).to eq(1)
-      expect(json_response[0]).to include('title', 'year', 'genre')
+    end
+
+    it 'returns a list containing one existing movie' do
+      expect(json_response.first).to eq(json_response.last).and include('title', 'year', 'genre')
     end
   end
 
   describe 'GET /api/movies/:id' do
-    it 'returns a specific movie' do
-      get "/api/v1/movies/#{movie.id}"
+    context 'with existing movie' do
+      before { get "/api/v1/movies/#{movie.id}" }
 
-      expect(response).to have_http_status(:ok)
-      expect(json_response['id']).to eq(movie.id)
+      it 'returns successful response' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns a specific movie' do
+        expect(json_response['id']).to eq(movie.id)
+      end
     end
 
     context 'when movie does not exist' do
