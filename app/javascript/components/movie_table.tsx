@@ -1,5 +1,5 @@
-// components/movie_table.tsx
-import React, { useEffect, useState } from 'react';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 
@@ -13,7 +13,6 @@ const MovieTable: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
 
   useEffect(() => {
-    // Fetch movies from your API endpoint
     fetch('/api/v1/movies')
       .then(response => response.json())
       .then(data => setMovies(data))
