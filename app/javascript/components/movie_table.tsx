@@ -23,6 +23,7 @@ const MovieTable: React.FC = () => {
     { title: 'Title', dataIndex: 'title', key: 'title' },
     { title: 'Year', dataIndex: 'year', key: 'year' },
     { title: 'Genre', dataIndex: 'genre', key: 'genre' },
+    { title: 'Rating', dataIndex: 'rating_score', key: 'rating_score' }
   ];
 
   return <Table dataSource={movies} columns={columns} />;

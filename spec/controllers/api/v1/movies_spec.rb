@@ -15,7 +15,7 @@ describe API::V1::Movies, type: :request do
     end
 
     it 'returns a list containing one existing movie' do
-      expect(json_response.first).to eq(json_response.last).and include('title', 'year', 'genre')
+      expect(json_response.first).to eq(json_response.last).and include('title', 'year', 'genre', 'rating_score')
     end
   end
 

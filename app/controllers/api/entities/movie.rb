@@ -6,6 +6,7 @@ module API
       expose :title
       expose :year
       expose :genre
+      expose :rating_score
 
       private
 
