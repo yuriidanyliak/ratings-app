@@ -11,7 +11,7 @@ module API
       resource :movies do
         desc 'Get a list of all movies'
         get do
-          movies = Movie.all
+          movies = Movie.all.includes(:genre, :ratings)
           present movies, with: API::Entities::Movie
         end
 

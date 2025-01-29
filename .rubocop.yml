@@ -14,3 +14,9 @@ Style/Documentation:
 # Soft-wrap is a great invention
 Layout/LineLength:
   Enabled: false
+
+MultipleMemoizedHelpers:
+  Enabled: false
+
+MultipleExpectations:
+  Enabled: false

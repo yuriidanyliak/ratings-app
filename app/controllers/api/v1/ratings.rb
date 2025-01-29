@@ -19,6 +19,17 @@ module API
         post do
           Rating.create!(user_id: params[:user_id], movie_id: params[:movie_id], score: params[:score], review: params[:review])
         end
+
+        desc 'Get filtered/sorted list of ratings'
+        params do
+          optional :movie_id, type: Integer, desc: 'Filter by movie'
+          optional :user_id, type: Integer, desc: 'Filter by user'
+          optional :sort_by, type: String, desc: 'Sorting option (newest, oldest, highest_score, lowest_score)'
+        end
+        get do
+          ratings = Queries::Ratings::Fetch.new(params).call
+          present ratings, with: API::Entities::Rating
+        end
       end
     end
   end
