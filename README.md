@@ -1,3 +1,31 @@
+# Test Task: Implement Movie Ratings Feature
+
+Objective: Develop and integrate a feature that allows users to rate movies within the application. This includes setting up the database schema, creating the necessary models and associations, developing an API for movie ratings, and providing a basic user interface for interaction.
+
+## Requirements:
+
+- Define the data layout to support movies and their ratings.
+- Maintain clear and concise commit messages for version control.
+- Define RESTful API for communication with UI part.
+- The UI can be minimalistic but should be functional and user-friendly.
+
+### API Development:
+
+Develop RESTful API endpoints to:
+- Create a new movie.
+- Retrieve a list of movies.
+- Submit a rating for a movie.
+- Retrieve ratings for a specific movie.
+
+### User Interface:
+
+Implement a basic UI that allows users to:
+- View a list of movies.
+- Select a movie to view details and ratings.
+- Submit a rating for a selected movie.
+
+This task aims to assess your ability to design and implement a feature from the database layer to the user interface, including API development and documentation.
+
 # Getting started 
 
 ## How can I fire up the app?
