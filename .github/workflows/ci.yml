@@ -46,7 +46,7 @@ jobs:
       - name: Install dependencies
         run: yarn --frozen-lockfile
 
-      - uses: actions/cache@v3.3.1
+      - uses: actions/cache@v4.2.0
         name: Cache assets
         with:
           path: |
@@ -56,7 +56,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-assets-v1-${{ hashFiles('**/*.lock') }}-
 
-      - uses: actions/cache@v3.3.1
+      - uses: actions/cache@v4.2.0
         name: Cache packs
         with:
           path: public/packs-test
