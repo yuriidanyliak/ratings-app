@@ -12,7 +12,7 @@ gem 'grape-swagger'
 gem 'grape-swagger-entity'
 gem 'grape-swagger-rails'
 gem 'net-smtp', require: false
-gem 'pg', '~> 1.4'
+gem 'pg', '~> 1.5'
 gem 'puma', '~> 5.6'
 gem 'rack-cors', require: 'rack/cors'
 gem 'rails', '~> 6.1.4', '>= 6.1.4.1'
