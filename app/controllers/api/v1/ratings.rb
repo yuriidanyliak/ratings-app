@@ -30,6 +30,17 @@ module API
           ratings = Queries::Ratings::Fetch.new(params).call
           present ratings, with: API::Entities::Rating
         end
+
+        desc 'Get ratings summary'
+        params do
+          optional :movie_id, type: Integer, desc: 'Filter by movie'
+          optional :user_id, type: Integer, desc: 'Filter by user'
+        end
+        get 'summary' do
+          ratings = Queries::Ratings::Fetch.new(params).call
+          summary = Queries::Ratings::Summary.new(ratings).call
+          present summary
+        end
       end
     end
   end

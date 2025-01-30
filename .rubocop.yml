@@ -20,3 +20,6 @@ MultipleMemoizedHelpers:
 
 MultipleExpectations:
   Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false

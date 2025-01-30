@@ -134,4 +134,91 @@ describe API::V1::Ratings, type: :request do
       end
     end
   end
+
+  describe 'GET /api/v1/ratings/summary' do
+    subject(:api_get) { get '/api/v1/ratings/summary', params: params }
+
+    let(:rating1) { create(:rating, user: user, movie: movie, score: 5) }
+    let(:rating2) { create(:rating, user: user, movie: movie, score: 3) }
+    let(:rating3) { create(:rating, user: user, movie: movie, score: 1) }
+
+    before do
+      rating1
+      rating2
+      rating3
+      api_get
+    end
+
+    context 'when no parameters are provided' do
+      let(:params) { {} }
+
+      it 'returns successful response' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns a valid summary' do
+        expect(json_response).to include(
+          'average_rating' => '3.0',
+          'rating_distribution' => { '1' => 1, '2' => 0, '3' => 1, '4' => 0, '5' => 1 },
+          'total_ratings' => 3
+        )
+      end
+    end
+
+    context 'when filtering by movie_id' do
+      let(:params) { { movie_id: movie.id } }
+
+      let(:other_movie) { create(:movie) }
+      let(:rating2) { create(:rating, user: user, movie: other_movie, score: 3) }
+
+      it 'returns successful response' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns a summary only for the specified movie' do
+        expect(json_response).to include(
+          'average_rating' => '3.0',
+          'rating_distribution' => { '1' => 1, '2' => 0, '3' => 0, '4' => 0, '5' => 1 },
+          'total_ratings' => 2
+        )
+      end
+    end
+
+    context 'when filtering by user_id' do
+      let(:params) { { user_id: user.id } }
+
+      let(:other_user) { create(:user) }
+      let(:rating3) { create(:rating, user: other_user, movie: movie, score: 1) }
+
+      it 'returns successful response' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns a summary only for the specified user' do
+        expect(json_response).to include(
+          'average_rating' => '4.0',
+          'rating_distribution' => { '1' => 0, '2' => 0, '3' => 1, '4' => 0, '5' => 1 },
+          'total_ratings' => 2
+        )
+      end
+    end
+
+    context 'when filtering by an invalid movie_id' do
+      let(:params) { { movie_id: 99_999 } }
+
+      it 'returns an empty summary' do
+        expect(response).to have_http_status(:ok)
+        expect(json_response).to eq({})
+      end
+    end
+
+    context 'when filtering by an invalid user_id' do
+      let(:params) { { user_id: 99_999 } }
+
+      it 'returns an empty summary' do
+        expect(response).to have_http_status(:ok)
+        expect(json_response).to eq({})
+      end
+    end
+  end
 end
