@@ -6,9 +6,15 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '3.1.2'
 
 gem 'bootsnap', '>= 1.4.4', require: false
+gem 'grape'
+gem 'grape-entity'
+gem 'grape-swagger'
+gem 'grape-swagger-entity'
+gem 'grape-swagger-rails'
 gem 'net-smtp', require: false
 gem 'pg', '~> 1.4'
 gem 'puma', '~> 5.6'
+gem 'rack-cors', require: 'rack/cors'
 gem 'rails', '~> 6.1.4', '>= 6.1.4.1'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 gem 'webpacker', '~> 5.0'
@@ -33,4 +39,8 @@ end
 group :test do
   gem 'capybara'
   gem 'selenium-webdriver'
+end
+
+group :development, :test do
+  gem 'factory_bot_rails'
 end
